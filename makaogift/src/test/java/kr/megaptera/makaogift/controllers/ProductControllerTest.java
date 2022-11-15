@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -47,5 +48,25 @@ class ProductControllerTest {
                 ));
 
         verify(productService).products();
+    }
+
+    @Test
+    void product() throws Exception {
+        Product product = new Product(
+                1L,
+                "제조사",
+                "test",
+                10000L,
+                "좋다"
+        );
+
+        given(productService.product(any()))
+                .willReturn(product);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/products/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(
+                        containsString("test")
+                ));
     }
 }
