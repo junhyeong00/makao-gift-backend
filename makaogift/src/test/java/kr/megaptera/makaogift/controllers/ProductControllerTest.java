@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -33,21 +36,25 @@ class ProductControllerTest {
         List<Product> products = List.of(
                 new Product(1L, "제조사 1", "상품 1", 500L, "상품 설명 1"),
                 new Product(2L, "제조사 2", "상품 2", 2000L, "상품 설명 2"),
-                new Product(2L, "제조사 3", "상품 3", 3000L, "상품 설명 3")
+                new Product(3L, "제조사 3", "상품 3", 3000L, "상품 설명 3")
         );
 
-        given(productService.products()).willReturn(products);
+        int page = 1;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/products"))
+        Page<Product> pageableProducts
+                = new PageImpl<>(products, PageRequest.of(page - 1, 2), products.size());
+
+        given(productService.products(page))
+                .willReturn(pageableProducts);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/products")
+                        .param("page", "1"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(
-                        containsString("\"products\":[")
-                ))
                 .andExpect(content().string(
                         containsString("2000")
                 ));
 
-        verify(productService).products();
+        verify(productService).products(page);
     }
 
     @Test
