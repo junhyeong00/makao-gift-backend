@@ -22,4 +22,10 @@ class BackdoorControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/backdoor/setup-products?count=5"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void setupUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/backdoor/setup-user"))
+                .andExpect(status().isOk());
+    }
 }
