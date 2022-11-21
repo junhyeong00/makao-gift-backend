@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("backdoor")
 public class BackdoorController {
@@ -45,6 +47,32 @@ public class BackdoorController {
                         "VALUES(1, ?, ?, ?, ?)",
                 "test123", "김토끼", passwordEncoder.encode("Password1234!"), 50_000);
 
+        return "OK";
+    }
+
+    @GetMapping("setup-orders")
+    public String setupOrders() {
+        LocalDateTime now = LocalDateTime.now();
+
+        jdbcTemplate.execute("DELETE FROM transaction");
+
+        jdbcTemplate.update("INSERT INTO " +
+                        "transaction(id, sender, maker, name, purchase_Count, purchase_Price," +
+                        "   receiver, address, message_To_Send, created_At)" +
+                        "VALUES(1, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "김토끼", "제조사 1", "상품 1", 3, 15_000, "산토끼", "산", "안녕", now);
+
+        jdbcTemplate.update("INSERT INTO " +
+                        "transaction(id, sender, maker, name, purchase_Count, purchase_Price," +
+                        "   receiver, address, message_To_Send, created_At)" +
+                        "VALUES(2, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "김토끼", "제조사 2", "상품 2", 4, 20_000, "산토끼", "산", "잘지내니", now);
+
+        jdbcTemplate.update("INSERT INTO " +
+                        "transaction(id, sender, maker, name, purchase_Count, purchase_Price," +
+                        "   receiver, address, message_To_Send, created_At)" +
+                        "VALUES(3, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "산토끼", "제조사 3", "상품 3", 2, 40_000, "김토끼", "서울", "잘지내지", now);
         return "OK";
     }
 }
