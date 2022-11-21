@@ -34,7 +34,7 @@ class SessionControllerTest {
         given(loginService.login("test123", "Password1234!")).willReturn(user);
 
         given(loginService.login("test123", "xxx")).willThrow(new LoginFailed());
-
+        given(loginService.login("xxx", "Password1234!")).willThrow(new LoginFailed());
     }
 
     @Test
@@ -52,12 +52,45 @@ class SessionControllerTest {
     }
 
     @Test
-    void loginFail() throws Exception {
+    void loginWithWrongUserName() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/session")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "\"userName\":\"xxx\"," +
+                                "\"password\":\"Password1234!\"" +
+                                "}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void loginWithWrongPassword() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/session")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{" +
                                 "\"userName\":\"test123\"," +
                                 "\"password\":\"xxx\"" +
+                                "}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void loginWithBlankUserName() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/session")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "\"userName\":\"\"," +
+                                "\"password\":\"Password1234!\"" +
+                                "}"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void loginWithBlankPassword() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.post("/session")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "\"userName\":\"test123\"," +
+                                "\"password\":\"\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
     }

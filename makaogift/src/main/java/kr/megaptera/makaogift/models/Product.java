@@ -31,6 +31,26 @@ public class Product {
         this.description = description;
     }
 
+    public Long id() {
+        return id;
+    }
+
+    public String maker() {
+        return maker;
+    }
+
+    public String name() {
+        return name;
+    }
+
+    public Long price() {
+        return price;
+    }
+
+    public String description() {
+        return description;
+    }
+
     public ProductDto toDto() {
         return new ProductDto(id, maker, name, price, description);
     }

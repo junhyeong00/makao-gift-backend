@@ -25,6 +25,13 @@ public class User {
     public User() {
     }
 
+    public User(Long id, String userName, String name, Long amount) {
+        this.id = id;
+        this.userName = userName;
+        this.name = name;
+        this.amount = amount;
+    }
+
     public String userName() {
         return userName;
     }
@@ -47,5 +54,9 @@ public class User {
 
     public void changePassword(String password, PasswordEncoder passwordEncoder) {
         this.encodedPassword = passwordEncoder.encode(password);
+    }
+
+    public void reduceAmount(Long purchasePrice) {
+        this.amount -= purchasePrice;
     }
 }

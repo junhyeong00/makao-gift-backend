@@ -7,6 +7,7 @@ import kr.megaptera.makaogift.models.User;
 import kr.megaptera.makaogift.services.LoginService;
 import kr.megaptera.makaogift.utils.JwtUtil;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,7 @@ public class SessionController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public LoginResultDto login(
-            @RequestBody LoginRequestDto loginRequestDto
+            @Validated @RequestBody LoginRequestDto loginRequestDto
     ) {
         String userName = loginRequestDto.getUserName();
         String password = loginRequestDto.getPassword();
