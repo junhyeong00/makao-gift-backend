@@ -27,6 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(OrderController.class)
@@ -135,5 +136,20 @@ class OrderControllerTest {
                         .header("Authorization", "Bearer " + token)
                         .param("page", "1"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void orderDetail() throws Exception {
+        Order order =  new Order(1L, "김토끼", "제조사 1", "상품 1", 2, 3000L, "산토끼", "산", "안녕",
+                LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0));
+
+        given(orderService.orderDetail(order.id()))
+                .willReturn(order);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/orders/1")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk());
+
+        verify(orderService).orderDetail(order.id());
     }
 }

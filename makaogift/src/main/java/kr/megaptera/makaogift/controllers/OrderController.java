@@ -16,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,6 +74,15 @@ public class OrderController {
         );
 
         return order.toOrderResultDto();
+    }
+
+    @GetMapping("orders/{id}")
+    public OrderDto orderDetail(
+            @RequestAttribute("userName") String userName,
+            @PathVariable("id") Long orderId
+    ) {
+        Order order = orderService.orderDetail(orderId);
+        return order.toDto();
     }
 
     @ExceptionHandler(OrderFailed.class)

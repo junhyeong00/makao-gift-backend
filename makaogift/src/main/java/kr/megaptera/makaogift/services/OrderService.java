@@ -1,6 +1,7 @@
 package kr.megaptera.makaogift.services;
 
 import kr.megaptera.makaogift.exceptions.OrderFailed;
+import kr.megaptera.makaogift.exceptions.OrderNotFound;
 import kr.megaptera.makaogift.exceptions.ProductNotFound;
 import kr.megaptera.makaogift.exceptions.UserNotFound;
 import kr.megaptera.makaogift.models.Order;
@@ -70,5 +71,10 @@ public class OrderService {
         Pageable pageable = PageRequest.of(page - 1, 8);
 
         return orderRepository.findAllBySender(sender, pageable);
+    }
+
+    public Order orderDetail(Long orderId) {
+        return orderRepository.findById(orderId)
+                .orElseThrow(OrderNotFound::new);
     }
 }

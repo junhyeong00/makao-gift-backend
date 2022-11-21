@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,5 +102,20 @@ class OrderServiceTest {
 
         verify(userRepository).findByUserName(userName);
         verify(orderRepository).findAllBySender(eq(name), any(Pageable.class));
+    }
+
+    @Test
+    void orderDetail() {
+        Order order =  new Order(1L, "김토끼", "제조사 1", "상품 1", 2, 3000L, "산토끼", "산", "안녕",
+                LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0));
+
+        given(orderRepository.findById(order.id()))
+                .willReturn(Optional.of(order));
+
+        Order found = orderService.orderDetail(order.id());
+
+        assertThat(found).isNotNull();
+
+        verify(orderRepository).findById(order.id());
     }
 }

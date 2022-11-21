@@ -97,4 +97,8 @@ public class Order {
                 receiver, address, messageToSend, createdAt.toString()
         );
     }
+
+    public Long id() {
+        return id;
+    }
 }
