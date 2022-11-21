@@ -1,50 +1,43 @@
 package kr.megaptera.makaogift.dtos;
 
-public class OrderDto {
-    private final Long id;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
-    private final String maker;
-
-    private final String name;
+public class OrderCreateDto {
+    private final Long productId;
 
     private final Integer purchaseCount;
 
     private final Long purchasePrice;
 
+    @NotBlank( message = "성함을 입력해주세요")
+    @Pattern(
+            regexp = "^[가-힣]{3,7}$",
+            message = "3-7자까지 한글만 사용 가능합니다"
+    )
     private final String receiver;
 
+    @NotBlank(message = "주소를 입력해주세요")
     private final String address;
 
     private final String messageToSend;
 
-    private final String createdAt;
-
-    public OrderDto(Long id, String maker,
-                    String name, Integer purchaseCount,
-                    Long purchasePrice, String receiver,
-                    String address, String messageToSend,
-                    String createdAt) {
-        this.id = id;
-        this.maker = maker;
-        this.name = name;
+    public OrderCreateDto(Long productId,
+                          Integer purchaseCount,
+                          Long purchasePrice,
+                          String receiver,
+                          String address,
+                          String messageToSend) {
+        this.productId = productId;
         this.purchaseCount = purchaseCount;
         this.purchasePrice = purchasePrice;
         this.receiver = receiver;
         this.address = address;
         this.messageToSend = messageToSend;
-        this.createdAt = createdAt;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getMaker() {
-        return maker;
-    }
-
-    public String getName() {
-        return name;
+    public Long getProductId() {
+        return productId;
     }
 
     public Integer getPurchaseCount() {
@@ -65,9 +58,5 @@ public class OrderDto {
 
     public String getMessageToSend() {
         return messageToSend;
-    }
-
-    public String getCreatedAt() {
-        return createdAt;
     }
 }

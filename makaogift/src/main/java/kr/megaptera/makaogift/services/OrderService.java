@@ -9,6 +9,9 @@ import kr.megaptera.makaogift.models.User;
 import kr.megaptera.makaogift.repositories.OrderRepository;
 import kr.megaptera.makaogift.repositories.ProductRepository;
 import kr.megaptera.makaogift.repositories.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -56,5 +59,16 @@ public class OrderService {
         orderRepository.save(order);
 
         return order;
+    }
+
+    public Page<Order> findOrdersByUserName(String userName, Integer page) {
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(UserNotFound:: new);
+
+        String sender = user.name();
+
+        Pageable pageable = PageRequest.of(page - 1, 8);
+
+        return orderRepository.findAllBySender(sender, pageable);
     }
 }

@@ -1,6 +1,7 @@
 package kr.megaptera.makaogift.controllers;
 
 import kr.megaptera.makaogift.models.Order;
+import kr.megaptera.makaogift.models.User;
 import kr.megaptera.makaogift.services.OrderService;
 import kr.megaptera.makaogift.utils.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,12 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -96,5 +106,34 @@ class OrderControllerTest {
                                 "\"messageToSend\":\"good\"" +
                                 "}"))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void orders() throws Exception {
+        String userName = "test123";
+        String name = "김토끼";
+        User user = new User(1L, userName, name, 10000L);
+
+        List<Order> orders = List.of(
+                new Order(1L, name, "제조사 1", "상품 1", 2, 3000L, "산토끼", "산", "안녕",
+                        LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0)),
+                new Order(2L, name, "제조사 2", "상품 2", 2, 3000L, "산토끼", "산", "안녕",
+                        LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0)),
+                new Order(3L, name, "제조사 3", "상품 3", 2, 3000L, "산토끼", "산", "안녕",
+                        LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0))
+        );
+        int page = 1;
+        int pageSize = 2;
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+
+        Page<Order> pageableOrders
+                = new PageImpl<>(orders, pageable, orders.size());
+        given(orderService.findOrdersByUserName(any(), any()))
+                .willReturn(pageableOrders);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/orders")
+                        .header("Authorization", "Bearer " + token)
+                        .param("page", "1"))
+                .andExpect(status().isOk());
     }
 }
