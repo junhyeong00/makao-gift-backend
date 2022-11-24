@@ -1,0 +1,1 @@
+web: java -Dserver.port=$PORT -Dspriing.profiles.active=production -jar build/libs/makaogift-0.0.1-SNAPSHOT.jar
