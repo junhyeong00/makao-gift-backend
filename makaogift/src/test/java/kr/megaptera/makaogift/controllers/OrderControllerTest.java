@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -78,7 +79,7 @@ class OrderControllerTest {
     }
 
     @Test
-    void orderWithBlankName() throws Exception {
+    void orderWithBlankReceiver() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.post("/order")
                         .header("Authorization","Bearer " + token)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -90,7 +91,10 @@ class OrderControllerTest {
                                 "\"address\":\"뉴욕\"," +
                                 "\"messageToSend\":\"good\"" +
                                 "}"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(
+                        containsString("2000")
+                ));
     }
 
     @Test
@@ -106,7 +110,10 @@ class OrderControllerTest {
                                 "\"address\":\"\"," +
                                 "\"messageToSend\":\"good\"" +
                                 "}"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(
+                        containsString("2001")
+                ));
     }
 
     @Test
@@ -117,11 +124,11 @@ class OrderControllerTest {
 
         List<Order> orders = List.of(
                 new Order(1L, name, "제조사 1", "상품 1", 2, 3000L, "산토끼", "산", "안녕",
-                        LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0)),
+                        LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0), ""),
                 new Order(2L, name, "제조사 2", "상품 2", 2, 3000L, "산토끼", "산", "안녕",
-                        LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0)),
+                        LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0), ""),
                 new Order(3L, name, "제조사 3", "상품 3", 2, 3000L, "산토끼", "산", "안녕",
-                        LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0))
+                        LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0), "")
         );
         int page = 1;
         int pageSize = 2;
@@ -141,7 +148,7 @@ class OrderControllerTest {
     @Test
     void orderDetail() throws Exception {
         Order order =  new Order(1L, "김토끼", "제조사 1", "상품 1", 2, 3000L, "산토끼", "산", "안녕",
-                LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0));
+                LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0), "");
 
         given(orderService.orderDetail(order.id()))
                 .willReturn(order);

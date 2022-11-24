@@ -25,9 +25,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 public class OrderController {
+    private static final Integer BLANK_RECEIVER = 2000;
+    private static final Integer BLANK_ADDRESS = 2001;
+    private static final Integer INVALID_RECEIVER = 2002;
+    private static final Integer INSUFFICIENT_AMOUNT = 2003;
+
     private final OrderService orderService;
 
     public OrderController(OrderService orderService) {
@@ -59,8 +66,10 @@ public class OrderController {
             @Validated @RequestBody OrderCreateDto orderCreateDto, BindingResult bindingResult
     ) {
         if (bindingResult.hasErrors()) {
-            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
-            throw new OrderFailed(errorMessage);
+            List<String> errorMessages = bindingResult.getAllErrors().stream()
+                    .map(error -> error.getDefaultMessage())
+                    .toList();
+            throw new OrderFailed(errorMessages);
         }
 
         Order order = orderService.createOrder(
@@ -88,6 +97,19 @@ public class OrderController {
     @ExceptionHandler(OrderFailed.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public OrderErrorDto orderFailed(OrderFailed e) {
-        return new OrderErrorDto(e.getErrorMessage());
+        Map<Integer, String> errorCodesAndMessages = e.getErrorMessages().stream()
+                .collect(Collectors.toMap(this::mapToErrorCode,
+                        errorMessage -> errorMessage));
+        return new OrderErrorDto(errorCodesAndMessages);
+    }
+
+    public Integer mapToErrorCode(String errorMessage) {
+        return switch (errorMessage) {
+            case "성함을 입력해주세요" -> BLANK_RECEIVER;
+            case "주소를 입력해주세요" -> BLANK_ADDRESS;
+            case "3-7자까지 한글만 사용 가능합니다" -> INVALID_RECEIVER;
+            case "잔액이 부족하여 선물하기가 불가합니다" -> INSUFFICIENT_AMOUNT;
+            default -> 9999;
+        };
     }
 }

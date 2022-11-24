@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Table(name = "TRANSACTION")
@@ -36,6 +37,8 @@ public class Order {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    private String imageUrl;
+
     public Order() {
     }
 
@@ -58,7 +61,8 @@ public class Order {
     public Order(String sender, String maker,
                  String name, Integer purchaseCount,
                  Long purchasePrice, String receiver,
-                 String address, String messageToSend) {
+                 String address, String messageToSend,
+                 String imageUrl) {
         this.sender = sender;
         this.maker = maker;
         this.name = name;
@@ -67,6 +71,7 @@ public class Order {
         this.receiver = receiver;
         this.address = address;
         this.messageToSend = messageToSend;
+        this.imageUrl = imageUrl;
     }
 
     public Order(Long id, String sender,
@@ -74,7 +79,8 @@ public class Order {
                  Integer purchaseCount,
                  Long purchasePrice, String receiver,
                  String address, String messageToSend,
-                 LocalDateTime createdAt) {
+                 LocalDateTime createdAt,
+                 String imageUrl) {
         this.id = id;
         this.sender = sender;
         this.maker = maker;
@@ -85,6 +91,7 @@ public class Order {
         this.address = address;
         this.messageToSend = messageToSend;
         this.createdAt = createdAt;
+        this.imageUrl = imageUrl;
     }
 
     public OrderResultDto toOrderResultDto() {
@@ -94,7 +101,8 @@ public class Order {
     public OrderDto toDto() {
         return new OrderDto(
                 id, maker, name, purchaseCount, purchasePrice,
-                receiver, address, messageToSend, createdAt.toString()
+                receiver, address, messageToSend,
+                createdAt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), imageUrl
         );
     }
 

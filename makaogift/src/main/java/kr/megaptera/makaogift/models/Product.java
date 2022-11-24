@@ -20,6 +20,8 @@ public class Product {
 
     private String description;
 
+    private String imageUrl;
+
     public Product() {
     }
 
@@ -51,7 +53,11 @@ public class Product {
         return description;
     }
 
+    public String imageUrl() {
+        return imageUrl;
+    }
+
     public ProductDto toDto() {
-        return new ProductDto(id, maker, name, price, description);
+        return new ProductDto(id, maker, name, price, description, imageUrl);
     }
 }

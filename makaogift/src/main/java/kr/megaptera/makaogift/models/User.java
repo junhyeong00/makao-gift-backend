@@ -32,6 +32,12 @@ public class User {
         this.amount = amount;
     }
 
+    public User(String userName, String name, Long amount) {
+        this.userName = userName;
+        this.name = name;
+        this.amount = amount;
+    }
+
     public String userName() {
         return userName;
     }

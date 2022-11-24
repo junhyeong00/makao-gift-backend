@@ -51,10 +51,11 @@ public class OrderService {
         String sender = user.name();
         String maker = product.maker();
         String name = product.name();
+        String imageUrl = product.imageUrl();
 
         Order order = new Order(
                sender, maker, name, purchaseCount, purchasePrice,
-                receiver, address, messageToSend
+                receiver, address, messageToSend, imageUrl
         );
 
         orderRepository.save(order);

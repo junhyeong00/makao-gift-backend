@@ -19,11 +19,13 @@ public class OrderDto {
 
     private final String createdAt;
 
+    private final String imageUrl;
+
     public OrderDto(Long id, String maker,
                     String name, Integer purchaseCount,
                     Long purchasePrice, String receiver,
                     String address, String messageToSend,
-                    String createdAt) {
+                    String createdAt, String imageUrl) {
         this.id = id;
         this.maker = maker;
         this.name = name;
@@ -33,6 +35,7 @@ public class OrderDto {
         this.address = address;
         this.messageToSend = messageToSend;
         this.createdAt = createdAt;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {
@@ -69,5 +72,9 @@ public class OrderDto {
 
     public String getCreatedAt() {
         return createdAt;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

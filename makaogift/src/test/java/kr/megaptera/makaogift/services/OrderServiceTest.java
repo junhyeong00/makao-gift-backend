@@ -107,7 +107,7 @@ class OrderServiceTest {
     @Test
     void orderDetail() {
         Order order =  new Order(1L, "김토끼", "제조사 1", "상품 1", 2, 3000L, "산토끼", "산", "안녕",
-                LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0));
+                LocalDateTime.of(2022, 11, 20, 11, 12, 10, 0), "");
 
         given(orderRepository.findById(order.id()))
                 .willReturn(Optional.of(order));

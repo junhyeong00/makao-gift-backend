@@ -2,10 +2,10 @@ package kr.megaptera.makaogift.dtos;
 
 import java.util.Map;
 
-public class OrderErrorDto{
+public class RegisterErrorDto {
     private final Map<Integer, String> errorCodesAndMessages;
 
-    public OrderErrorDto(Map<Integer, String> errorCodesAndMessages) {
+    public RegisterErrorDto(Map<Integer, String> errorCodesAndMessages) {
         this.errorCodesAndMessages = errorCodesAndMessages;
     }
 
